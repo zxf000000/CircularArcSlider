@@ -36,6 +36,8 @@ class SliderView: UIView {
     private var lineColor: UIColor!
     private var progressColor: UIColor!
     
+    private var startX: CGFloat = 0
+    
     private var didLayout: Bool = false
     
     init(frame: CGRect, horizontalMargin: CGFloat? = 20, verticalMargin: CGFloat? = 20, ballRadius: CGFloat? = 15, ballColor: UIColor? = .white, lineColor: UIColor? = UISlider.appearance().tintColor ?? .systemGray2, progressColor: UIColor? = .systemBlue) {
@@ -136,9 +138,15 @@ class SliderView: UIView {
     @objc
     func panGesChanged() {
         
+        if panGes.state == .began {
+            startX = ball.center.x
+        }
+        
         if panGes.state == .changed {
             // 计算x值
-            var x = panGes.location(in: self).x
+            let transitionX = panGes.translation(in: self).x
+            var x = transitionX + startX
+//            var x = panGes.location(in: self).x
             if x < horizontalMargin {
                 x = horizontalMargin
             }
